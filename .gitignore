@@ -1,0 +1,14 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.csv
+*.tiff
+*.jpg
+*.log
+*.png
+*.RData
+data/
+figure/
+results/
+WGCNA/
