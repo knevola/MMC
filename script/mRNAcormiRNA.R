@@ -4,10 +4,10 @@ rm(list = ls())
 library(tidyverse)
 library(VennDiagram)
 library(multiMiR)
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 miRNAdat <- read.csv('l_mrna_2011_m_0797s_17_c1.csv')
 pheno <- read.csv('PhenoData_5_28.csv')
-mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data/phe000002.v7_release_manifest.txt", comment.char="#")
+mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data/phe000002.v7_release_manifest.txt", comment.char="#")
 mRNAdat <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 pheno_samp <- merge(pheno, mRNA_sample[,c(1,2)], by.x = "shareid", by.y = "Subject_ID")
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
@@ -102,6 +102,9 @@ cortarget186 <- cor186_geneinfo[cor186_geneinfo$category %in% int186,]
 cortarget186 <- merge(cortarget186, entrez186, by.x = "category", by.y = "SYMBOL")
 write.csv(cortarget19,"miR19targetscor.csv")
 write.csv(cortarget186, "miR186targetscor.csv")
+
+cortarget19 <-read.csv("miR19targetscor.csv")
+cortarget186 <- read.csv("miR186targetscor.csv")
 library(edgeR)
 GO19<-goana(de = na.omit(cortarget19$ENTREZID), universe = universe_unique)
 KEGG19 <- kegga(de =cortarget19$ENTREZID,universe = universe_unique)
@@ -122,7 +125,30 @@ int_GO <- merge(GO19_p, GO186_p, by.x = "Term", by.y = "Term")
 intersect(KEGG186_p$Pathway, KEGG19_p$Pathway)
 
 library(biomaRt)
-ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl") #uses human ensembl annotations
+ensembl = useMart(biomart = "ensembl",dataset="hsapiens_gene_ensembl") #uses human ensembl annotations
 #gets gene symbol, transcript_id and go_id for all genes annotated with GO:0007507
 gene.data <- getBM(attributes=c('ensembl_gene_id','entrezgene_id','hgnc_id','hgnc_symbol'),
                    filters = 'go', values = 'GO:0047696', mart = ensembl)
+insulin <- getBM(attributes=c('ensembl_gene_id','entrezgene_id','hgnc_id','hgnc_symbol'),
+                 filters = 'go', values = 'GO:0032868', mart = ensembl)
+insulin186 <- getBM(attributes=c('ensembl_gene_id','entrezgene_id','hgnc_id','hgnc_symbol'),
+                 filters = 'go', values = 'GO:1901142', mart = ensembl)
+PTH <- getBM(attributes=c('ensembl_gene_id','entrezgene_id','hgnc_id','hgnc_symbol'),
+             filters = 'go', values = 'GO:0071107', mart = ensembl)
+  
+intersect(PTH$entrezgene_id, cortarget186$ENTREZID)
+
+GK <- getGeneKEGGLinks(species.KEGG = "hsa")
+#TGF-B
+cortarget19$category[cortarget19$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04350"]]
+cortarget186$category[cortarget186$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04350"]]
+#PTH
+cortarget19$category[cortarget19$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04928"]]
+cortarget186$category[cortarget186$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04928"]]
+#Insulin
+cortarget19$category[cortarget19$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04910"]]
+cortarget186$category[cortarget186$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04910"]]
+
+#Estrogen
+cortarget19$category[cortarget19$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04915"]]
+cortarget186$category[cortarget186$ENTREZID %in% GK$GeneID[GK$PathwayID=="path:hsa04915"]]
