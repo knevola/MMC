@@ -7,7 +7,7 @@ library(WGCNA)
 library(tidyverse)
 library(VennDiagram)
 options(stringsAsFactors = T)
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 miRNA <- read.csv('l_mrna_2011_m_0797s_17_c1.csv')
 pheno <- read.csv('PhenoData_5_28.csv')
 
