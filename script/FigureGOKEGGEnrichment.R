@@ -1,6 +1,6 @@
 # Figure GO and KEGG Enrichment 
 rm(list = ls())
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
 library(VennDiagram)
 library(dplyr)
 library(ggplot2)
@@ -43,7 +43,8 @@ GOblue_unfiltered <- data.frame(GO_blue_all, logp = -log10(GO_blue_all$P.DE), Gr
 
 GO_unfiltered <- rbind(GO19_unfiltered, GO186_unfiltered, GOblue_unfiltered)
 
-Terms_int <- GO_unfiltered %>% filter(., X %in% c(GO_terms$Bone.Osteo, GO_terms$Insulin, GO_terms$Estrogen, GO_terms$TH.PTH, GO_terms$Adrenergic))
+Terms_int <- GO_unfiltered %>% filter(., Term %in% c("osteoblast differentiation", "osteoclast differentiation", "bone development", "cellular response to insulin stimulus",
+                                                  "cellular response to parathyroid hormone stimulus", "regulation of intracellular estrogen receptor signaling pathway"))
 Insulin <- GO_unfiltered %>%  filter(., X %in% GO_terms$Insulin)
 Estrogen <- GO_unfiltered %>% filter(., X %in% GO_terms$Estrogen)
 TH.PTH <- GO_unfiltered %>% filter(., X %in% GO_terms$TH.PTH)
