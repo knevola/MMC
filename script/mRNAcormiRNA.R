@@ -19,6 +19,8 @@ colnames(data_adj_t)<- mRNAdat$transcript_cluster_id
 dat<- merge(pheno_samp, data_adj_t, by.x = "Sample_ID", by.y = 0)
 dat$ADRB1 <- dat$`3265140`
 dat$ADRB2 <- dat$`2834743`
+dat$HDAC4 <- dat$`2606026`
+dat$RUNX2 <- dat$`2908762`
 summary(dat$ADRB1)
 summary(dat$ADRB2)
 keep <- c("shareid",as.character(int$miRNA))
@@ -29,6 +31,9 @@ mRNAs <- names(dat)[-c(1:23)]
 cor.test(~miR_19a_3p + ADRB1,data = mmdat, method = "spearman")
 cor.test(~miR_19a_3p + ADRB1,data = mmdat)
 cor.test(~miR_19a_3p + ADRB2,data = mmdat, method = "spearman")
+cor.test(~miR_19a_3p + HDAC4,data = mmdat, method = "spearman")
+cor.test(~miR_19a_3p + RUNX2,data = mmdat, method = "spearman")
+
 plot(mmdat$miR_19a_3p, mmdat$ADRB1)
 abline(lm())
 # 

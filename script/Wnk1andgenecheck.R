@@ -3,9 +3,9 @@ rm(list =ls())
 library(readr)
 library(emmeans)
 library(ggplot2)
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 GPL5175 <- read_table2("GPL5175.txt", skip = 14)
-mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data/phe000002.v7_release_manifest.txt", comment.char="#")
+mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data/phe000002.v7_release_manifest.txt", comment.char="#")
 mRNAdat <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 pheno <- read.csv('PhenoData_5_28.csv')
 pheno_samp <- merge(pheno, mRNA_sample[,c(1,2)], by.x = "shareid", by.y = "Subject_ID")
@@ -27,6 +27,8 @@ dat$IL1B <- dat$`2571510`
 dat$RANKL <- dat$`3487299`
 dat$ADRB1 <- dat$`3265140`
 dat$ADRB2 <- dat$`2834743`
+dat$HDAC4_1 <- dat$`2606026`
+dat$RUNX2 <- dat$`2908762`
 
 dat$FtoGroup<-ifelse(dat$f8cbtobmd>mean(dat$f8cbtobmd), "High", "Low")
 dat$LSGroup <-ifelse(dat$s8cbl24bd>mean(dat$s8cbl24bd, na.rm = T), "High", "Low")
@@ -176,3 +178,24 @@ ggplot(data =EM_ADRB2, aes(x = emmeans.BB, y = emmeans.emmean, color = emmeans.F
   geom_errorbar(aes(ymin = emmeans.emmean - emmeans.SE, ymax = emmeans.emmean + emmeans.SE), width=.2,position=position_dodge(.9)) + 
   labs(title = "ADRB2 expression in BMD by BB use", x = "BB User Status", y = "EMMean", color = "FtoGroup") + theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) + scale_color_brewer(palette = "Paired")
+
+modelHDAC4_1 <- aov(HDAC4_1 ~ FtoGroup + BB + FtoGroup*BB , data = dat)
+summary(modelHDAC4_1) # Fto
+EM_HDAC4_1 <- as.data.frame(emmeans(modelHDAC4_1, pairwise ~ FtoGroup | BB))
+
+ggplot(data =EM_HDAC4_1, aes(x = emmeans.BB, y = emmeans.emmean, color = emmeans.FtoGroup)) + geom_point(position=position_dodge(width = 0.9)) + 
+  geom_errorbar(aes(ymin = emmeans.emmean - emmeans.SE, ymax = emmeans.emmean + emmeans.SE), width=.2,position=position_dodge(.9)) + 
+  labs(title = "HDAC4 expression in BMD by BB use", x = "BB User Status", y = "EMMean", color = "FtoGroup") + theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) + scale_color_brewer(palette = "Paired")
+
+modelRUNX2 <- aov(RUNX2 ~ FtoGroup + BB + FtoGroup*BB , data = dat)
+summary(modelRUNX2) # Fto
+EM_RUNX2 <- as.data.frame(emmeans(modelRUNX2, pairwise ~ FtoGroup | BB))
+
+ggplot(data =EM_RUNX2, aes(x = emmeans.BB, y = emmeans.emmean, color = emmeans.FtoGroup)) + geom_point(position=position_dodge(width = 0.9)) + 
+  geom_errorbar(aes(ymin = emmeans.emmean - emmeans.SE, ymax = emmeans.emmean + emmeans.SE), width=.2,position=position_dodge(.9)) + 
+  labs(title = "RUNX2 expression in BMD by BB use", x = "BB User Status", y = "EMMean", color = "FtoGroup") + theme_classic() +
+  theme(plot.title = element_text(hjust = 0.5)) + scale_color_brewer(palette = "Paired")
+
+
+
