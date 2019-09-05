@@ -71,3 +71,4 @@ ggplot(data = TH.PTH, aes(x = Term, y = logp, fill = Group)) + geom_bar(stat = "
 ggplot(data = Adrenergic, aes(x = Term, y = logp, fill = Group)) + geom_bar(stat = "identity", position = position_dodge()) + 
   geom_abline(slope = 0, intercept = -log10(0.05)) + coord_flip() + ylab(label = "-log10(p)") +
   ggtitle(label = "Adrenergic Signaling GO Terms") + scale_fill_manual(values = c("red", "red4", "steelblue"))
+
