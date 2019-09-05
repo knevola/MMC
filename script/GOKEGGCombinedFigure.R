@@ -57,4 +57,4 @@ GOKEGGblue_f <- GOKEGGblue_f[order(GOKEGGblue_f$log10p, decreasing = T),]
 row.names(GOKEGGblue_f) <- NULL
 ggplot(data = GOKEGGblue_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge()) + 
   geom_abline(slope = 0, intercept = -log10(0.05)) + coord_flip() + ylab(label = "-log10(p-value)") + xlab(label = "Term")+
-  ggtitle(label = "Blue miRNA Cluster Bone Related Terms")
+  ggtitle(label = "Blue miRNA Module Bone Related Terms")
