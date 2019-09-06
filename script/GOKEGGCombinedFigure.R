@@ -27,9 +27,10 @@ GOKEGG19_f$log10p <- -log10(GOKEGG19_f$P.DE)
 
 GOKEGG19_f <- GOKEGG19_f[order(GOKEGG19_f$log10p, decreasing = T),]
 row.names(GOKEGG19_f) <- NULL
-ggplot(data = GOKEGG19_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge()) + 
+p19a<-ggplot(data = GOKEGG19_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge(), fill = "steelblue") + 
   geom_abline(slope = 0, intercept = -log10(0.05)) + coord_flip() + ylab(label = "-log10(p-value)") + xlab(label = "Term")+
-  ggtitle(label = "miR-19a Bone Related Terms")
+  ggtitle(label = "miR-19a") + ylim(0,5)
+p19a
 
 GO_186_noont <- GO_186[-3]
 names(KEGG_186)[2] <- "Term"
@@ -40,9 +41,11 @@ GOKEGG186_f$log10p <- -log10(GOKEGG186_f$P.DE)
 
 GOKEGG186_f <- GOKEGG186_f[order(GOKEGG186_f$log10p, decreasing = T),]
 row.names(GOKEGG186_f) <- NULL
-ggplot(data = GOKEGG186_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge()) + 
+p186 <- ggplot(data = GOKEGG186_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge(), fill = "steelblue") + 
   geom_abline(slope = 0, intercept = -log10(0.05)) + coord_flip() + ylab(label = "-log10(p-value)") + xlab(label = "Term")+
-  ggtitle(label = "miR-186 Bone Related Terms")
+  ggtitle(label = "miR-186") + ylim (0,5)
+p186
+
 
 GO_blue_noont <- GO_blue[-3]
 names(KEGG_blue)[2] <- "Term"
@@ -55,6 +58,11 @@ GOKEGGblue_f$log10p <- -log10(GOKEGGblue_f$P.DE)
 
 GOKEGGblue_f <- GOKEGGblue_f[order(GOKEGGblue_f$log10p, decreasing = T),]
 row.names(GOKEGGblue_f) <- NULL
-ggplot(data = GOKEGGblue_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge()) + 
+p_blue <- ggplot(data = GOKEGGblue_f, aes(x = reorder(Term, log10p), y = log10p)) + geom_bar(stat = "identity", position = position_dodge(), fill = "steelblue", width = 0.9) + 
   geom_abline(slope = 0, intercept = -log10(0.05)) + coord_flip() + ylab(label = "-log10(p-value)") + xlab(label = "Term")+
-  ggtitle(label = "Blue miRNA Module Bone Related Terms")
+  ggtitle(label = "Blue miRNA Module") + ylim(0,5)
+
+library(ggpubr)
+ggarrange(p19a, p186, p_blue, 
+          labels = c("A", "B", "C"),
+          ncol = 1, nrow = 3, align = "hv", heights = c(8,6,11))
