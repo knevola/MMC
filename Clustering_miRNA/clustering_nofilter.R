@@ -11,6 +11,10 @@ setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 miRNA <- read.csv('l_mrna_2011_m_0797s_17_c1.csv')
 pheno <- read.csv('PhenoData_5_28.csv')
 
+miRNA_delta_cq <- miRNA[-1]
+miRNA_delta_cq <- -(miRNA_delta_cq-27)
+miRNA <- cbind(miRNA[1], miRNA_delta_cq)
+
 # Subset analytic dataset/phenotype data ####
 pheno3 <- pheno[is.na(pheno$f8cbnbmd) == F,]
 
@@ -66,7 +70,7 @@ save(dataExpr, datTraits1, file = "FHS_miRNA_1.RData")
 # Variance Filtering ------------------------------------------------------
 thevar <- diag(var(dataExpr, na.rm = T))
 vars<- quantile(thevar, na.rm = T)
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/Clustering_miRNA/Figures")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA/Figures")
 write.csv(vars, "Var_miRNA_nofilter.csv")
 
 
