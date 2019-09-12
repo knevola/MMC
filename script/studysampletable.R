@@ -153,11 +153,8 @@ setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
 
 Means$var <- as.character(Means$var)
-row.names(Means)<- Means$var
 Means_blue <- Means %>%  filter(., var %in% as.character(WGCNA_blue$X))
-row.names(Means_blue)<- Means_blue$var
 Means_int <- Means %>% filter(., var %in% as.character(int$miRNA))
-row.names(Means_int)<- Means_int$var
 # pheatmap(na.omit(Means_blue[2:3]))
 # pheatmap(na.omit(Means_blue[2:3]), scale = "row")
 # pheatmap(na.omit(Means_int[2:3]))
@@ -194,4 +191,11 @@ ggplot(data =EM_19a, aes(x = emmeans.BB, y = emmeans.emmean, color = emmeans.Fto
   labs(title = "miR-19a-3p expression in BMD by BB use", x = "BB User Status", y = "EMMean of | \u0394 Cq |", color = "FtoGroup") + theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) + scale_color_brewer(palette = "Paired")
 
+model19aBB <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8, data = miRNA_pheno)
+summary(model19aBB)
+EM_19a <- as.data.frame(emmeans(model19aBB, pairwise ~  BB))
 summary(lm(miR19a~BB, data = miRNA_pheno))
+
+model186BB <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8, data = miRNA_pheno)
+summary(model186BB)
+EM_186 <- as.data.frame(emmeans(model186BB, pairwise ~  BB))
