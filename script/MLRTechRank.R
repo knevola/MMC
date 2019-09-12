@@ -10,11 +10,15 @@ library(ggplot2)
 library(pheatmap)
 library(haven)
 library(lmerTest)
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 miRNAdat <- read.csv('l_mrna_2011_m_0797s_17_c1.csv')
 pheno <- read.csv('PhenoData_5_28.csv')
 mir_tech = "mirna_tech_17.sas7bdat"
 mirnatech <- read_sas(mir_tech)
+
+miRNA_delta_cq <- miRNAdat[-1]
+miRNA_delta_cq <- -(miRNA_delta_cq-27)
+miRNAdat <- cbind(miRNAdat[1], miRNA_delta_cq)
 
 # Merge pheno with miRNA ####
 quantcon<-quantile(mirnatech$concentration, probs = seq(0,1, 0.1))
@@ -204,7 +208,7 @@ BBtable <- BBtable[order(BBtable$miRNA),]
 write.csv(BBtable, "BBoverlapresults_7_9_rank.csv")
 
 
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/Clustering_miRNA/Figures")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA/Figures")
 WGCNA <- read.csv("MiRNA_significance_module_membership_nofilter.csv")
 setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
 WGCNA_select<-WGCNA %>%  filter(., mergedColors == "blue")
