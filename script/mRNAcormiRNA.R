@@ -12,6 +12,11 @@ mRNAdat <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_do
 pheno_samp <- merge(pheno, mRNA_sample[,c(1,2)], by.x = "shareid", by.y = "Subject_ID")
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
 
+
+miRNA_delta_cq <- miRNAdat[-1]
+miRNA_delta_cq <- -(miRNA_delta_cq-27)
+miRNAdat <- cbind(miRNAdat[1], miRNA_delta_cq)
+
 data_adj_t <-as.data.frame(t(mRNAdat))
 data_adj_t <- data_adj_t[-1,]
 colnames(data_adj_t)<- mRNAdat$transcript_cluster_id
@@ -35,8 +40,6 @@ cor.test(~miR_19a_3p + HDAC4,data = mmdat, method = "spearman")
 cor.test(~miR_19a_3p + RUNX2,data = mmdat, method = "spearman")
 
 plot(mmdat$miR_19a_3p, mmdat$ADRB1)
-abline(lm())
-# 
  x<-lm(ADRB1~miR_19a_3p+AGE8 + SEX+HGT8 +WGT8, data = mmdat)
  summary(x)
  hist(mmdat$ADRB1)
@@ -68,8 +71,8 @@ cor19_fdr <- cor19[cor19$Pvalue< 0.05,]
 cor186 <- cormir(mRNAs = mRNAs, miRNA = "miR_186_5p_a2", data = mmdat)
 cor186_fdr <- cor186[cor186$Pvalue < 0.05,]
 
-cor19_f_pos <- cor19_fdr[cor19_fdr$Estimate > 0,]
-cor186_f_pos <- cor186_fdr[cor186_fdr$Estimate > 0,]
+cor19_f_pos <- cor19_fdr[cor19_fdr$Estimate < 0,]
+cor186_f_pos <- cor186_fdr[cor186_fdr$Estimate < 0,]
 
 library(readr)
 GPL5175 <- read_table2("GPL5175.txt", skip = 14)
