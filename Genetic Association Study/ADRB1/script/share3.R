@@ -29,11 +29,9 @@ adrb1_tidy<- vcfR2tidy(adrb1, format_fields = c("GT", "DS", "GP"))
 
 # Calculating the minor allele frequency
 maf <- as.data.frame(maf(adrb1))
-
 adrb1_tidy$meta
 adrb1_tidy$fix
 adrb1_tidy$gt
-
 adrb1_tidy$fix$MAF <- maf$Frequency
 
 save(adrb1_tidy, file = "adrb1_vcfr_tidy.RData")
