@@ -14,10 +14,27 @@ library(ggplot2)
 library(emmeans)
 library(reshape2)
 library(matrixStats)
+library(haven)
 # Read in data
 setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 miRNAdat <- read.csv('l_mrna_2011_m_0797s_17_c1.csv')
 pheno <- read.csv('PhenoData_5_28.csv')
+mir_tech = "mirna_tech_17.sas7bdat"
+mirnatech <- read_sas(mir_tech)
+
+miRNA_delta_cq <- miRNAdat[-1]
+miRNA_delta_cq <- -(miRNA_delta_cq-27)
+miRNAdat <- cbind(miRNAdat[1], miRNA_delta_cq)
+
+quantcon<-quantile(mirnatech$concentration, probs = seq(0,1, 0.1))
+mirnatech$rankcon <- cut(mirnatech$concentration, quantcon)
+quantqual <-quantile(mirnatech$RNA_quality, probs = seq(0,1, 0.1), na.rm = T)
+mirnatech$rankqual <- cut(mirnatech$RNA_quality, quantqual)
+quant260 <- quantile(mirnatech$`_260_280`, probs = seq(0,1, 0.1), na.rm = T)
+mirnatech$rank260 <-cut(mirnatech$`_260_280`, quant260)
+miRNA_pheno4 <- merge(pheno, mirnatech, by.x = "shareid", by.y = "shareid")
+miRNA_pheno <- merge(miRNA_pheno4, miRNAdat, by.x = "shareid", by.y = "shareid")
+miRNA_pheno$Isolation_Batch<-as.factor(miRNA_pheno$Isolation_Batch)
 
 miRNA_pheno <- merge(miRNAdat, pheno, by = "shareid")
 
@@ -163,8 +180,8 @@ Means_int <- Means %>% filter(., var %in% as.character(int$miRNA))
 write.csv(Means_int, "FigureS2data.csv")
 ggplot(data = Means_int, aes(x=var, y = Means, color = group)) + geom_point(position=position_dodge(width = 0.9)) + geom_errorbar(aes(ymin = Means - SE, ymax = Means + SE), width=.2, position = position_dodge(0.9))+theme_minimal()+scale_color_brewer(palette = "Paired")
 boxplot(miR_19a_3p~BB,data = miRNA_pheno)
-miRNA_pheno$miR19a <- 0 - (miRNA_pheno$miR_19a_3p - 27)
-miRNA_pheno$miR186 <- 0 - (miRNA_pheno$miR_186_5p_a2 - 27)
+miRNA_pheno$miR19a <- miRNA_pheno$miR_19a_3p
+miRNA_pheno$miR186 <- miRNA_pheno$miR_186_5p_a2
 boxplot(miR19a~BB, data = miRNA_pheno, xlab = "BB User Status", ylab = "| \u0394 Cq |", main = "miR-19a-3p by BB Use")
 
 model19 <- lm(miR19a~ f8cbtobmd + BB + f8cbtobmd*BB , data = miRNA_pheno) 
@@ -191,11 +208,11 @@ ggplot(data =EM_19a, aes(x = emmeans.BB, y = emmeans.emmean, color = emmeans.Fto
   labs(title = "miR-19a-3p expression in BMD by BB use", x = "BB User Status", y = "EMMean of | \u0394 Cq |", color = "FtoGroup") + theme_classic() +
   theme(plot.title = element_text(hjust = 0.5)) + scale_color_brewer(palette = "Paired")
 
-model19aBB <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8, data = miRNA_pheno)
+model19aBB <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
 summary(model19aBB)
 EM_19a <- as.data.frame(emmeans(model19aBB, pairwise ~  BB))
 summary(lm(miR19a~BB, data = miRNA_pheno))
 
-model186BB <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8, data = miRNA_pheno)
+model186BB <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
 summary(model186BB)
 EM_186 <- as.data.frame(emmeans(model186BB, pairwise ~  BB))
