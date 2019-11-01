@@ -36,7 +36,7 @@ miRNA_pheno4 <- merge(pheno, mirnatech, by.x = "shareid", by.y = "shareid")
 miRNA_pheno <- merge(miRNA_pheno4, miRNAdat, by.x = "shareid", by.y = "shareid")
 miRNA_pheno$Isolation_Batch<-as.factor(miRNA_pheno$Isolation_Batch)
 
-miRNA_pheno <- merge(miRNAdat, pheno, by = "shareid")
+
 
 pheno1 <- pheno
 pheno_female <- pheno1 %>% filter(., SEX == "Female")
