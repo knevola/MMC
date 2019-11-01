@@ -157,24 +157,29 @@ Ftoresults1_p <- Ftoresults1 %>%  filter(., variable == "f8cbtobmd") %>% filter(
 S24results1_p <- S24results1 %>%  filter(., variable == "s8cbl24bd") %>% filter(., `Pr(>|t|)` < 0.05)
 #S24results1_f <- S24results1 %>%  filter(., variable == "s8cbl24bd") %>% filter(., FDR < 0.1)
 BBresults1_f <- BBresults1 %>% filter(., variable == "BBYes") %>% filter(.,FDR < 0.1)
+BBresults1_p <- BBresults1 %>% filter(., variable == "BBYes") %>% filter(., `Pr(>|t|)` < 0.05)
 
 Ftoresults2_p <- Ftoresults2 %>%  filter(., variable == "f8cbtobmd") %>% filter(., `Pr(>|t|)` < 0.05)
 Ftoresults2_f <- Ftoresults2 %>%  filter(., variable == "f8cbtobmd") %>% filter(., FDR < 0.1)
 S24results2_p <- S24results2 %>%  filter(., variable == "s8cbl24bd") %>% filter(., `Pr(>|t|)` < 0.05)
 #S24results2_f <- S24results2 %>%  filter(., variable == "s8cbl24bd") %>% filter(., FDR < 0.1)
 BBresults2_f <- BBresults2 %>% filter(., variable == "BBYes") %>% filter(.,FDR < 0.1)
+BBresults2_p <- BBresults2 %>% filter(., variable == "BBYes") %>% filter(., `Pr(>|t|)` < 0.05)
 
 Ftoresults3_p <- Ftoresults3  %>% filter(., p.value < 0.05)
 #Ftoresults3_f <- Ftoresults3 %>%  filter(., p.adj < 0.1)
 S24results3_p <- S24results3  %>% filter(., p.value < 0.05)
 #S24results3_f <- S24results3 %>% filter(., p.adj < 0.1)
 BBresults3_f <- BBresults3 %>% filter(.,p.adj < 0.1)
+BBresults3_p <- BBresults3 %>% filter(.,p.value < 0.1)
 
 Ftoall <- c(as.character(Ftoresults1_p$miRNA), as.character(Ftoresults2_p$miRNA), as.character(Ftoresults3_p$miRNA))
 S24all <- c(as.character(S24results1_p$miRNA), as.character(S24results2_p$miRNA), as.character(S24results3_p$miRNA))
 BBall <- c(as.character(BBresults1_f$miRNA), as.character(BBresults2_f$miRNA), as.character(BBresults3_f$miRNA))
+BBall_p <- c(as.character(BBresults1_p$miRNA), as.character(BBresults2_p$miRNA), as.character(BBresults3_p$miRNA))
 
 int<- intersect(intersect(Ftoall, S24all), BBall)
+int_p<- intersect(intersect(Ftoall, S24all), BBall_p)
 
 a <- data.frame(Ftoresults1_p[Ftoresults1_p$miRNA %in% int,], model = "linear")
 #b <- data.frame(Ftoresults2_p[Ftoresults2_p$miRNA %in% int,], model = "logistic")
