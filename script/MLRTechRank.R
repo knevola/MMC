@@ -252,3 +252,40 @@ venn.diagram(x, filename = "WGCNABMDBBVenn_8_19.tiff", fill = c("steelblue", "li
 
 y <- list(`Total Femur \n BMD` = Ftoall, `Lumbar Spine \n BMD` = S24all, `BB Use` = BBall, `Brown WGCNA \n Cluster` = WGCNA_brown$X)
 venn.diagram(y, filename = "WGCNABMDBBVenn_8_19_brown.tiff", fill = c("steelblue", "lightblue", "red", "goldenrod"))
+
+# Supplementary Table Results
+
+#Filter BMD Results no significance filter
+TFResults1 <- Ftoresults1 %>% filter(., variable == "f8cbtobmd")
+TFResults2 <- Ftoresults2 %>% filter(., variable == "f8cbtobmd")
+LSResults1 <- S24results1 %>% filter(., variable == "s8cbl24bd")
+LSResults2 <- S24results2 %>% filter(., variable == "s8cbl24bd")
+BBResults1 <- BBresults1 %>% filter(., variable == "BBYes")
+BBResults2 <- BBresults2 %>% filter(., variable == "BBYes")
+
+TFResults1$Phenotype <- "Total Femur"
+TFResults1$Analysis <- "Linear"
+TFResults2$Phenotype <- "Total Femur"
+TFResults2$Analysis <- "Logistic"
+LSResults1$Phenotype <- "Lumbar Spine"
+LSResults1$Analysis <- "Linear"
+LSResults2$Phenotype <- "Lumbar Spine"
+LSResults2$Analysis <- "Logistic"
+BBResults1$Phenotype <- "BB Use"
+BBResults1$Analysis <- "Linear"
+BBResults2$Phenotype <- "BB Use"
+BBResults2$Analysis <- "Logistic"
+
+LnLResults <- rbind(TFResults1, TFResults2, LSResults1, LSResults2, BBResults1, BBResults2)
+Ftoresults3$Phenotype <- "Total Femur"
+S24results3$Phenotype <- "Lumbar Spine"
+BBresults3$Phenotype <- "BB Use"
+
+Ftoresults3$Analysis <- "Combined"
+S24results3$Analysis <- "Combined"
+BBresults3$Analysis <- "Combined"
+
+CombinedResults <- rbind(Ftoresults3,S24results3, BBresults3)
+
+write.csv(LnLResults, "LinearAndLogisticResults.csv")
+write.csv(CombinedResults, "CombinedResults.csv")
