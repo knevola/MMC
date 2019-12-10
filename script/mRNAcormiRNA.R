@@ -11,7 +11,7 @@ mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC
 mRNAdat <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 pheno_samp <- merge(pheno, mRNA_sample[,c(1,2)], by.x = "shareid", by.y = "Subject_ID")
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
-
+GPL5175 <- read_table2("GPL5175.txt", skip = 14)
 
 miRNA_delta_cq <- miRNAdat[-1]
 miRNA_delta_cq <- -(miRNA_delta_cq-27)
@@ -26,6 +26,11 @@ dat$ADRB1 <- dat$`3265140`
 dat$ADRB2 <- dat$`2834743`
 dat$HDAC4 <- dat$`2606026`
 dat$RUNX2 <- dat$`2908762`
+dat$CTHRC1 <- dat$`3110317`
+dat$APOE <- dat$`3835879`
+hist(dat$CTHRC1)
+hist(dat$ADRB2)
+hist(dat$APOE)
 summary(dat$ADRB1)
 summary(dat$ADRB2)
 keep <- c("shareid",as.character(int$miRNA))
