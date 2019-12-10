@@ -1,6 +1,6 @@
 # Extract Gene Symbol #
 rm(list = ls())
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
 
 proteins <- read.csv(file = 'itraqproteins.csv')
 
