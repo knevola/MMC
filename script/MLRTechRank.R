@@ -215,13 +215,13 @@ write.csv(BBtable, "BBoverlapresults_7_9_rank.csv")
 
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA/Figures")
 WGCNA <- read.csv("MiRNA_significance_module_membership_nofilter.csv")
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 WGCNA_select<-WGCNA %>%  filter(., mergedColors == "blue")
 WGCNA_brown <- WGCNA %>% filter(., mergedColors == "brown")
 
 listall <- list( `Total Femur \n BMD` = Ftoall, `Spine L2-L4 \n BMD` =S24all, `BB Use` = BBall)
 listall_wgcna <- list(`Total Femur \n BMD` = Ftoall, `Spine L2-L4 \n BMD` =S24all, `BB Use` = BBall, WGCNA = as.character(WGCNA_select$X))
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/figure')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/figure')
 venn.diagram(listall, filename = "SpineFemurBBVenn_7_9_rank.tiff", fill = c("slateblue1", "lightskyblue1", "violetred1"), main = "Total Femur BMD, Spine L2-L4 BMD, \n and BB use Overlap")
 venn.diagram(listall_wgcna, filename = "SpineFemurBBVenn_WGCNA_7_9_rank.tiff", fill = c("slateblue1", "lightskyblue1", "violetred1", "goldenrod1"), main = "Total Femur BMD, Spine L2-L4 BMD, \n BB use and WGCNA Overlap")
 
