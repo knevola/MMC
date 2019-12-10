@@ -157,11 +157,11 @@ noBB_pheno <- miRNA_pheno[miRNA_pheno$BB == "No",]
 noBB_pheno1 <- noBB_pheno[,!names(noBB_pheno) %in% drop]
 noBB_pheno1 <- noBB_pheno1[-c(1:12)]
 miRNA_pheno_ave <-miRNA_pheno[,!names(miRNA_pheno) %in% drop] 
-miRNA_pheno_ave <- colMeans(miRNA_pheno_ave, na.rm = T)
-BB_means<-data.frame(var = names(BB_pheno1), Means = colMeans(BB_pheno1, na.rm = T), SE = colSds(as.matrix(BB_pheno1), na.rm = T)/sqrt(nrow(BB_pheno1)), group = "BB user")
-
-noBB_means <- data.frame(var = names(noBB_pheno1), Means = colMeans(noBB_pheno1, na.rm = T), SE = colSds(as.matrix(BB_pheno1), na.rm = T)/sqrt(nrow(noBB_pheno1)), group = "non-BB user")
-Means <- rbind(BB_means, noBB_means)
+# miRNA_pheno_ave <- colMeans(miRNA_pheno_ave, na.rm = T)
+# BB_means<-data.frame(var = names(BB_pheno1), Means = colMeans(BB_pheno1, na.rm = T), SE = colSds(as.matrix(BB_pheno1), na.rm = T)/sqrt(nrow(BB_pheno1)), group = "BB user")
+# 
+# noBB_means <- data.frame(var = names(noBB_pheno1), Means = colMeans(noBB_pheno1, na.rm = T), SE = colSds(as.matrix(BB_pheno1), na.rm = T)/sqrt(nrow(noBB_pheno1)), group = "non-BB user")
+# Means <- rbind(BB_means, noBB_means)
 library(pheatmap)
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA/Figures")
 WGCNA <- read.csv("MiRNA_significance_module_membership_nofilter.csv")
@@ -169,16 +169,16 @@ WGCNA_blue <- WGCNA %>% filter(.,mergedColors == "blue")
 setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
 
-Means$var <- as.character(Means$var)
-Means_blue <- Means %>%  filter(., var %in% as.character(WGCNA_blue$X))
-Means_int <- Means %>% filter(., var %in% as.character(int$miRNA))
+# Means$var <- as.character(Means$var)
+# Means_blue <- Means %>%  filter(., var %in% as.character(WGCNA_blue$X))
+# Means_int <- Means %>% filter(., var %in% as.character(int$miRNA))
 # pheatmap(na.omit(Means_blue[2:3]))
 # pheatmap(na.omit(Means_blue[2:3]), scale = "row")
 # pheatmap(na.omit(Means_int[2:3]))
 # pheatmap(na.omit(Means_int[2:3]), scale = "row")
 
-write.csv(Means_int, "FigureS2data.csv")
-ggplot(data = Means_int, aes(x=var, y = Means, color = group)) + geom_point(position=position_dodge(width = 0.9)) + geom_errorbar(aes(ymin = Means - SE, ymax = Means + SE), width=.2, position = position_dodge(0.9))+theme_minimal()+scale_color_brewer(palette = "Paired")
+# write.csv(Means_int, "FigureS2data.csv")
+# ggplot(data = Means_int, aes(x=var, y = Means, color = group)) + geom_point(position=position_dodge(width = 0.9)) + geom_errorbar(aes(ymin = Means - SE, ymax = Means + SE), width=.2, position = position_dodge(0.9))+theme_minimal()+scale_color_brewer(palette = "Paired")
 boxplot(miR_19a_3p~BB,data = miRNA_pheno)
 miRNA_pheno$miR19a <- miRNA_pheno$miR_19a_3p
 miRNA_pheno$miR186 <- miRNA_pheno$miR_186_5p_a2
@@ -191,12 +191,13 @@ summary(model186)
 model186 <- lm(miR186~ BB, data = miRNA_pheno) 
 
 ggplot(data = miRNA_pheno, aes(x = f8cbtobmd, y = miR19a, color = BB)) + geom_smooth(method = lm, se = TRUE, fullrange = TRUE) + ggtitle(label =  "miR-19a-3p by Total Femur BMD") + 
-  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + theme(plot.title = element_text(hjust = 0.5)) +theme(axis.text = element_text(size = 6), axis.title = element_text(size = 8), title = element_text(size = 10), legend.text = element_text(size = 8), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
-ggsave(filename = "miR19byTFbmd.tiff", width = 80, height = 60 ,unit = "mm")
+  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + theme(plot.title = element_text(hjust = 0.5)) +theme(axis.text = element_text(size = 10), axis.title = element_text(size = 10), title = element_text(size = 10), legend.text = element_text(size = 10), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
+ggsave(filename = "miR19byTFbmd.tiff", width = 90, height = 60 ,unit = "mm")
 
 ggplot(data = miRNA_pheno, aes(x = f8cbtobmd, y = miR186, color = BB)) + geom_smooth(method = lm, se = TRUE, fullrange = TRUE) + ggtitle(label =  "miR-186-5p by Total Femur BMD") + 
-  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + theme(plot.title = element_text(hjust = 0.5)) +theme(axis.text = element_text(size = 6), axis.title = element_text(size = 8), title = element_text(size = 10), legend.text = element_text(size = 8), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
-ggsave(filename = "miR186byTFbmd.tiff", width = 80, height = 60 ,unit = "mm")
+  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + 
+  theme(plot.title = element_text(hjust = 0.5)) + theme(axis.text = element_text(size = 10), axis.title = element_text(size = 10), title = element_text(size = 10), legend.text = element_text(size = 10), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
+ggsave(filename = "miR186byTFbmd.tiff", width = 90, height = 60 ,unit = "mm")
 
 miRNA_pheno$FtoGroup<-ifelse(miRNA_pheno$f8cbtobmd<mean(miRNA_pheno$f8cbtobmd), "Low", "High")
 model19a <- lm(miR19a ~ FtoGroup + BB + FtoGroup*BB, data = miRNA_pheno)
