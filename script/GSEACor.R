@@ -9,7 +9,7 @@ library(enrichplot)
 library(DOSE)
 library(ggplot2)
 library(org.Hs.eg.db)
-setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/data')
+setwd('/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data')
 GPL5175 <- read_table2("GPL5175.txt", skip = 14)
 cortarget19<-read.csv("miR19targetscor.csv")
 cortarget186<-read.csv("miR186targetscor.csv")
@@ -35,6 +35,9 @@ write.csv(GO19_p, "GO_miR19a.csv")
 write.csv(KEGG19_p, "KEGG_miR19a.csv")
 write.csv(GO186_p, "GO_miR186.csv")
 write.csv(KEGG186_p, "KEGG_miR186.csv")
+write.csv(KEGG19, "KEGG_miR19a_unfiltered.csv")
+write.csv(KEGG186, "KEGG_miR186_unfiltered.csv")
+
 
 int_GO <- merge(GO19_p, GO186_p, by.x = "Term", by.y = "Term")
 intersect(KEGG186_p$Pathway, KEGG19_p$Pathway)
@@ -50,7 +53,7 @@ library(dplyr)
 library(multiMiR)
 library(edgeR)
 library(clusterProfiler)
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/Clustering_miRNA")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA")
 WGCNA <- read.csv("MiRNA_significance_module_membership_nofilter.csv")
 WGCNA.blue <- WGCNA %>% filter(., mergedColors == "blue")
 blue_miRNA <- as.character(WGCNA.blue$X)
@@ -80,17 +83,37 @@ barplot(table$Freq )
 
 write.csv(table, "FrequencyofGenes.csv")
 quantile(table$Freq, probs = seq(0, 1, 0.1))
-table2<-table[table$Freq > 2 & table$Freq < 15,]
+table2<-table[table$Freq >= 2 & table$Freq < 15,]
+table3 <- table[table$Freq > 2 & table$Freq <15,]
 tablesym <- as.data.frame(table(genesdfuni$target_symbol))
-tablesym2 <- tablesym[tablesym$Freq > 2,]
+tablesym2 <- tablesym[tablesym$Freq >= 2,]
+
 
 GO2 <- goana(as.vector(table2$Var1))
 KEGG2 <- kegga(as.vector(table2$Var1))
 
+GO3 <- goana(as.vector(table3$Var1))
+KEGG3 <- kegga(as.vector(table3$Var1))
+
 GO2_p <- GO2[GO2$P.DE < 0.05,]
 KEGG2_p <- KEGG2[KEGG2$P.DE < 0.05,]
 
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data")
+GO3_p <- GO3[GO3$P.DE < 0.05,]
+KEGG3_p <- KEGG3[KEGG3$P.DE < 0.05,]
+
+
+write.csv(GO2,"BlueModuleGO_2020.csv")
+write.csv(KEGG2, "BlueModuleKEGG_2020.csv")
+write.csv(GO2_p, "BlueModuleGO_filtered_2020.csv")
+write.csv(KEGG2_p, "BlueModuleKEGG_filtered_2020.csv")
+
+write.csv(GO3,"BlueModuleGO_3.csv")
+write.csv(KEGG3, "BlueModuleKEGG_3.csv")
+write.csv(GO3_p, "BlueModuleGO_filtered_3.csv")
+write.csv(KEGG3_p, "BlueModuleKEGG_filtered_3.csv")
+
+
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
 GO186 <- read.csv("GO_miR186.csv")
 GO19 <- read.csv("GO_miR19a.csv")
 KEGG186 <- read.csv("KEGG_miR186.csv")
