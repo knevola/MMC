@@ -69,3 +69,5 @@ ggarrange(p19a, p186, p_blue,
           labels = c("A", "B", "C"),
           ncol = 1, nrow = 3, align = "hv", heights = c(8,6,11))
 ggsave(filename = "GOKeggCombined.tiff", width = 177, height = 150 ,unit = "mm")
+
+
