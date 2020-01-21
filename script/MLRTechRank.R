@@ -35,6 +35,7 @@ Colsums$NAs[1:30]<- NA
 drop <- c('cvdpair', 'casecontrol', 'idtype.x', "idtype.y")
 miRNA_pheno <- miRNA_pheno[, !(names(miRNA_pheno) %in% drop)]
 
+write.csv(Colsums, "ColumnSums.csv")
 # Setup model specific data ####
 # Model 1 Only (linear)
 Colsums1 <- Colsums[Colsums$NAs < 0.1 | is.na(Colsums$NAs) == T,]
