@@ -139,3 +139,5 @@ write.csv(mirs5,"psig_eqtl.csv", row.names = F, quote = F)
 df<- as.data.frame(table(miRs$Gene,miRs$miRNA))
 df1 <- df[df$Freq != 0,]
 write.csv(df1, "SignificantMiRNAswithGenes.csv")
+
+
