@@ -93,3 +93,25 @@ GO_overlap <- goana(as.vector(unique(overlap$target_entrez)))
 KEGG_overlap <- kegga(as.vector(unique(overlap$target_entrez)))
 GO_p_overlap <- GO_overlap[GO_overlap$P.DE < 0.05,]
 KEGG_p_overlap <- KEGG_overlap[KEGG_overlap$P.DE < 0.05,]
+
+
+#Determine miRNA genes and associated with osteoblast differentiation and ossification
+library(biomaRt)
+ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl") #uses human ensembl annotations
+#gets gene symbol, transcript_id and go_id for all genes annotated with GO term
+attr<-listAttributes(ensembl)
+filt <- listFilters(ensembl)
+ossification.genes <- getBM(attributes=c('hgnc_symbol', 'ensembl_transcript_id', "entrezgene_id"),
+                            filters = 'go', values = 'GO:0043932', mart = ensembl)
+obdiff.genes <- getBM(attributes=c('hgnc_symbol', 'ensembl_transcript_id', "entrezgene_id"),
+                      filters = 'go', values = 'GO:0001649', mart = ensembl)
+reg_obdiff.genes <-getBM(attributes=c('hgnc_symbol', 'ensembl_transcript_id', "entrezgene_id"),
+                         filters = 'go', values = 'GO:0045667', mart = ensembl)
+oss.genes <- getBM(attributes=c('hgnc_symbol', 'ensembl_transcript_id', "entrezgene_id"),
+                   filters = 'go', values = 'GO:0001503', mart = ensembl)
+
+# Filter for targets 
+ADRB2_3<- ADRB2_genesdfuni %>% filter(., target_entrez %in% ADRB2_table3$Var1)
+goi <- as.character(c(ossification.genes$entrezgene_id,obdiff.genes$entrezgene_id, reg_obdiff.genes, oss.genes$entrezgene_id)) 
+targets3<- ADRB2_3 %>% filter(., target_entrez %in% goi)
+all_targets<- ADRB2_genesdfuni %>% filter(., target_entrez %in% goi)
