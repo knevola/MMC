@@ -43,8 +43,10 @@ pheno_female <- pheno1 %>% filter(., SEX == "Female")
 pheno_male <- pheno1 %>%  filter(., SEX == "Male")
 pheno1 %>% tbl_summary(.,by = "BB",statistic = list(..continuous.. = "{mean} ({sd})",..categorical.. = "{n} / {N} ({p}%)")) 
 pheno1 %>% tbl_summary(., statistic = list(..continuous.. = "{mean} ({sd})",..categorical.. = "{n} / {N} ({p}%)")) 
-
+pheno1$Tscore <- ((-0.023 + 0.939 * pheno1$f8cbnbmd  - 0.019)/1.087 - 0.858) / 0.120
 t.test(f8cbnbmd~BB, pheno1)# Not significant
+t.test(Tscore~BB, pheno1)# Not significant
+
 t.test(f8cbtobmd~BB, pheno1)# Sig (p = 0.01)
 t.test(f8cbtrbmd~BB, pheno1)# Sig (p = 0.004)
 t.test(s8cbl2bd~BB, pheno1)# Sig (p = 0.0002)
