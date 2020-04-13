@@ -2,10 +2,14 @@
 #### Read vcf file:
 library(vcfR)
 library(R.utils)
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data/ktn_target_genes/")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data/ktn_target_genes_4_2020/")
 target_files<-list.files(pattern = "*.vcf")
 target_genes <- gsub(".recode.vcf", "", target_files)
+# ADRB3, PRKAR1B did not have any SNPs that met the MAF threshold
+target_genes <- target_genes[-c(3,8)]
+
 for (i in target_genes){
+  print(i)
   gene = read.vcfR(paste(i, ".recode.vcf",sep = ""))
   # ID numbers are not unique so set ID to arbitrary numbers
   gene@fix[,3] <-1:length(gene@fix[,3])
@@ -40,5 +44,5 @@ for (i in target_genes){
   save(tidy, file = paste(i,"_vcfr_tidy_filtered_genotype.RData",sep=""))
 }
 
-
+i
 
