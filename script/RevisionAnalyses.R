@@ -224,18 +224,60 @@ dbp_B1_lm <- lm(DBP8~B1+AGE8+SEX+HGT8+WGT8, data = pheno)
 summary(dbp_BB_lm)
 
 # Explained Variance ####
-ToF_lm_miRNA = lm(f8cbtobmd~miR19a+miR186 + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
-summary(ToF_lm_miRNA)$r.squared
-# r.squared = 0.3612231
-mod = anova(ToF_lm_miRNA)
+ToF_lm_miR19 = lm(f8cbtobmd~miR19a + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
+summary(ToF_lm_miR19)
+summary(ToF_lm_miR19)$r.squared
+mod = anova(ToF_lm_miR19)
 ss = mod$`Sum Sq`
-tot_rsq = sum(ss[1:2])/sum(ss)
+tot_rsq = sum(ss[1:length(ss)-1])/sum(ss)
 print(tot_rsq)
-# tot_rsq = 0.02117483
 x1_rsq = ss[1]/sum(ss)
 print(x1_rsq)
-# x1_sq = 0.02053637
-x2_rsq = ss[2]/sum(ss)
-print(x2_rsq)
-# x2_rsq = 0.0006384544
+
+# % explained variance for miR-19a#
+exv_19 <- x1_rsq/tot_rsq
+
+LS_lm_miR19 = lm(s8cbl24bd~miR19a + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
+summary(LS_lm_miR19)
+summary(LS_lm_miR19)$r.squared
+mod = anova(LS_lm_miR19)
+ss = mod$`Sum Sq`
+tot_rsq = sum(ss[1:length(ss)-1])/sum(ss)
+print(tot_rsq)
+
+x1_rsq = ss[1]/sum(ss)
+print(x1_rsq)
+
+# % explained variance for miR-19a#
+exv_19 <- x1_rsq/tot_rsq
+print(exv_19)
+
+ToF_lm_miR186 = lm(f8cbtobmd~miR186 + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
+summary(ToF_lm_miR186)
+summary(ToF_lm_miR186)$r.squared
+mod = anova(ToF_lm_miR186)
+ss = mod$`Sum Sq`
+tot_rsq = sum(ss[1:length(ss)-1])/sum(ss)
+print(tot_rsq)
+x1_rsq = ss[1]/sum(ss)
+print(x1_rsq)
+
+# % explained variance for miR-186#
+exv_186 <- x1_rsq/tot_rsq
+print(exv_186)
+
+LS_lm_miR186 = lm(s8cbl24bd~miR186 + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
+summary(LS_lm_miR186)
+summary(LS_lm_miR186)$r.squared
+mod = anova(LS_lm_miR186)
+ss = mod$`Sum Sq`
+tot_rsq = sum(ss[1:length(ss)-1])/sum(ss)
+print(tot_rsq)
+
+x1_rsq = ss[1]/sum(ss)
+print(x1_rsq)
+
+# % explained variance for miR-186#
+exv_186 <- x1_rsq/tot_rsq
+print(exv_186)
 
