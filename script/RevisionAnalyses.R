@@ -281,3 +281,5 @@ print(x1_rsq)
 exv_186 <- x1_rsq/tot_rsq
 print(exv_186)
 
+# Correlation between miRNA
+cor.test(miRNA_pheno$miR19a, miRNA_pheno$miR186, method = "spearman")
