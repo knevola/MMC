@@ -30,11 +30,3 @@ extract <-function(gene_list) {
 extract(gene_list = gene_list) # This will take about 3.5 hours to run
 
 print("Done.")
-
-#chr 10 was loaded as vcf
-
-i = 12
-cmd = "vcftools --vcf chr"
-cmd = paste(cmd,gene_list$Chromosome[i],"_c1.vcf", " --chr ",gene_list$Chromosome[i]," --from-bp ",gene_list$Min[i]," --to-bp ",gene_list$Max[i], sep = "")
-cmd = paste(cmd," --positions WellImputedPositions8.txt --keep IndivWithPheno.txt --recode ", "--out ",gene_list$Gene.Symbol[i],sep="")
-system(cmd)
