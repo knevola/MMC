@@ -44,5 +44,4 @@ for (i in target_genes){
   save(tidy, file = paste(i,"_vcfr_tidy_filtered_genotype.RData",sep=""))
 }
 
-i
 
