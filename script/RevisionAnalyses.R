@@ -283,3 +283,14 @@ print(exv_186)
 
 # Correlation between miRNA
 cor.test(miRNA_pheno$miR19a, miRNA_pheno$miR186, method = "spearman")
+
+# % difference in BMD between BB users and non-users ####
+tscore_yes<- mean(pheno$FN_Tscore[pheno$BB == "Yes"])
+tscore_no <- mean(pheno$FN_Tscore[pheno$BB == "No"])
+pc_diff <- (tscore_yes - tscore_no) /tscore_no 
+pc_diff
+fnmodel <- lm(FN_Tscore~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+
+fn<-emmeans(fnmodel, specs = "BB")
+fn <- data.frame(fn, BMD = "Femoral Neck")
+(fn$emmean[2] - fn$emmean[1])/fn$emmean[1]
