@@ -8,17 +8,14 @@ library(GEOquery)
 
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data")
 
-load("All_Genes_SNPs.RData")
-all_snps <- saveLoadReference
-gene_list <- read.xlsx("Candidate Gene List.xlsx", sheetIndex = 1)
+load("CandidateGenes_4_2020.RData")
+all_snps <- pheno_snp_pos
+gene_list <- read.xlsx("CandidateGeneList_4_10.xlsx", sheetIndex = 1)
 all_snps_unnested <- all_snps %>% unnest(cols = c(data))
 all_snps_names <- data.frame(Start = all_snps_unnested$POS, End = all_snps_unnested$POS, Gene= all_snps_unnested$Gene)
 all_snps_names <- unique(all_snps_names)
 genes_symbol<- as.character(gene_list$Gene.Symbol)
-genes_symbol1 <- gsub("TNFS11", "RANKL", genes_symbol)
-genes_symbol2 <- gsub("TNFRSF11A", "RANK", genes_symbol1)
-genes_symbol2 <- gsub("TNFRSF11B", "OPG", genes_symbol2)
-gene_list$Gene <- genes_symbol2
+gene_list$Gene <- genes_symbol
 all_snps_names1 <- merge(all_snps_names, gene_list, by.x = "Gene", by.y = "Gene", all.x = T)
 snp_names <- all_snps_names1[-c(4:12)]
 snp_names$Start <- as.character(snp_names$Start)
@@ -70,6 +67,6 @@ annotate_snp <- function(snps) {
   return(data)
   
 }
-results <- annotate_snp(snps) # Will take about 4 to 5 hours to run.
+results <- annotate_snp(snps) # Will take about 2 hours to run.
 results$old_POS <- paste(snp_names$Chromosome, ":", snp_names$Start, sep = "")
-saveRDS(results, file = 'AllSNPsrsID.RData')
+save(results, file = 'AllSNPsrsID_4_2020.RData')
