@@ -26,7 +26,7 @@ mean(pheno$FN_Tscore[pheno$BB == "No"])
 sd(pheno$FN_Tscore[pheno$BB == "No"])
 
 fnmodel <- lm(FN_Tscore~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
-
+summary(fnmodel)
 fn<-emmeans(fnmodel, specs = "BB")
 
 fn <- data.frame(fn, BMD = "Femoral Neck")
@@ -200,6 +200,23 @@ miR19a_LS_DBP <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + ra
 summary(miR19a_LS_DBP)
 miR186_LS_DBP <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + DBP8 , data = miRNA_pheno)
 summary(miR186_LS_DBP)
+
+# Adjusting for Both BP and Treatment for hypertension ####
+miR19a_BB_BP3 <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8  , data = miRNA_pheno)
+summary(miR19a_BB_BP3)
+miR186_BB_BP3 <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+summary(miR186_BB_BP3)
+
+miR19a_Fto_BP3 <- lm(miR19a ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+summary(miR19a_Fto_BP3)
+miR186_Fto_BP3 <- lm(miR186 ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+summary(miR186_Fto_BP3)
+
+miR19a_LS_BP3 <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+summary(miR19a_LS_BP3)
+miR186_LS_BP3 <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+summary(miR186_LS_BP3)
+
 # Correlation between BP and Treatment for Hypertension/BB use ####
 t.test(SBP8~HRX8, pheno)
 t.test(DBP8~HRX8, pheno)
@@ -289,8 +306,49 @@ tscore_yes<- mean(pheno$FN_Tscore[pheno$BB == "Yes"])
 tscore_no <- mean(pheno$FN_Tscore[pheno$BB == "No"])
 pc_diff <- (tscore_yes - tscore_no) /tscore_no 
 pc_diff
-fnmodel <- lm(FN_Tscore~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+fnmodel_T <- lm(FN_Tscore~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
 
 fn<-emmeans(fnmodel, specs = "BB")
 fn <- data.frame(fn, BMD = "Femoral Neck")
 (fn$emmean[2] - fn$emmean[1])/fn$emmean[1]
+
+fnmodel <- lm(f8cbnbmd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+ftomodel<-lm(f8cbtobmd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+ftrmodel <- lm(f8cbtrbmd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+s2model <- lm(s8cbl2bd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+s3model <- lm(s8cbl3bd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+s4model <- lm(s8cbl4bd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+s24model <- lm(s8cbl24bd~BB + AGE8 + SEX + HGT8 + WGT8, data = pheno)
+
+summary(fnmodel)
+summary(ftomodel)
+summary(ftrmodel)
+summary(s2model)
+summary(s3model)
+summary(s4model)
+summary(s24model)
+
+fn<-as.data.frame(emmeans(fnmodel, specs = "BB"))
+fto<-as.data.frame(emmeans(ftomodel, specs = "BB"))
+ftr<-as.data.frame(emmeans(ftrmodel, specs = "BB"))
+s24<-as.data.frame(emmeans(s24model, specs = "BB"))
+
+(fn$emmean[2] - fn$emmean[1])/fn$emmean[1]
+(fto$emmean[2] - fto$emmean[1])/fto$emmean[1]
+(ftr$emmean[2] - ftr$emmean[1])/ftr$emmean[1]
+(s24$emmean[2] - s24$emmean[1])/s24$emmean[1]
+
+# Analyses for meta analysis
+pheno_fem <- miRNA_pheno[miRNA_pheno$SEX == "Female",]
+
+summary(lm(miR186~f8cbtobmd+AGE8+HGT8+WGT8,data = pheno_fem))
+summary(lm(miR19a~f8cbtobmd+AGE8+HGT8+WGT8,data = pheno_fem))
+
+summary(lm(miR186~s8cbl24bd+AGE8+HGT8+WGT8,data = pheno_fem))
+summary(lm(miR19a~s8cbl24bd+AGE8+HGT8+WGT8,data = pheno_fem))
+
+summary(lm(miR186~FN_Tscore+AGE8+HGT8+WGT8,data = pheno_fem))
+summary(lm(miR19a~FN_Tscore+AGE8+HGT8+WGT8,data = pheno_fem))
+
+summary(lm(miR186~FN_Tscore+SEX+AGE8+HGT8+WGT8,data = miRNA_pheno))
+summary(lm(miR19a~FN_Tscore+SEX+AGE8+HGT8+WGT8,data = miRNA_pheno))
