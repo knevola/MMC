@@ -26,6 +26,7 @@ write.csv(chrs8, "WellImputedSNPs08.csv", quote = F, row.names = F)
 
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data")
 library(tidyr)
+chrs8<-read.csv("WellImputedSNPs08.csv")
 chrs8 <- separate(data=chrs8, col = SNP, into = c("CHR", "POS"), sep = ":")
 chrs8$CHR <- as.numeric(chrs8$CHR)
 chrs8$POS <- as.numeric(chrs8$POS)

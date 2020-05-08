@@ -1,0 +1,10 @@
+#rm(list=ls())
+library(haven)
+mir_tech = "mirna_tech_17.sas7bdat"
+mirna <- read_sas(mir_tech)
+head(mirna)
+library(snpStats)
+#install.packages("BiocManager")
+#BiocManager::install("gdsfmt")
+#install.packages("Mega2R")
+library(Mega2R)

@@ -136,6 +136,10 @@ fem_miRs_sig <- fem_results %>% filter(., var =="gt_DS:BBYes") %>% filter(.,p < 
 write.csv(fem_results,"Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
 write.csv(male_results, "Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
 
-
+# Plots ####
 library(ggplot2)
-ggplot(data_male_nest$data[[1]], aes(x = gt_DS, y = miR_186_5p_a2, col = BB)) + geom_line()
+miRNA_snp<-ggplot(data_male_nest$data[[1]], aes(x = gt_DS, y = miR_186_5p_a2, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
+FNBMD_snp<-ggplot(data_male_nest$data[[1]], aes(x = gt_DS, y = f8cbnbmd, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
+miRNA_FNBMD<-ggplot(data_male_nest$data[[1]], aes(x = miR_186_5p_a2, y = f8cbnbmd, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
+library(gridExtra)
+grid.arrange(miRNA_snp, FNBMD_snp, miRNA_FNBMD, nrow = 1)
