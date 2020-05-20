@@ -80,19 +80,24 @@ model19aBB <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + ra
 summary(model19aBB)
 
 # Sensitivity analysis adjusting for treatment for hypertension ####
-miR19a_BB_hrx <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miRNA_pheno$HRX_BB[miRNA_pheno$HRX8 == "Yes" & miRNA_pheno$BB == "Yes"] <-"BB Hypertension Treatment"
+miRNA_pheno$HRX_BB[miRNA_pheno$HRX8 == "Yes" & miRNA_pheno$BB == "No"] <-"Non-BB Hypertension Treatment"
+miRNA_pheno$HRX_BB[miRNA_pheno$HRX8 == "No"] <-"Non-Hypertension Treatment"
+miRNA_pheno$HRX_BB <- relevel(miRNA_pheno$HRX_BB, "Non-Hypertension")
+table(miRNA_pheno$HRX_BB)
+miR19a_BB_hrx <- lm(miR19a ~ HRX_BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
 summary(miR19a_BB_hrx)
-miR186_BB_hrx <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miR186_BB_hrx <- lm(miR186 ~ HRX_BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual, data = miRNA_pheno)
 summary(miR186_BB_hrx)
 
-miR19a_Fto_hrx <- lm(miR19a ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miR19a_Fto_hrx <- lm(miR19a ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX_BB , data = miRNA_pheno)
 summary(miR19a_Fto_hrx)
-miR186_Fto_hrx <- lm(miR186 ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miR186_Fto_hrx <- lm(miR186 ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX_BB , data = miRNA_pheno)
 summary(miR186_Fto_hrx)
 
-miR19a_LS_hrx <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miR19a_LS_hrx <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX_BB , data = miRNA_pheno)
 summary(miR19a_LS_hrx)
-miR186_LS_hrx <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX8 , data = miRNA_pheno)
+miR186_LS_hrx <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + HRX_BB , data = miRNA_pheno)
 summary(miR186_LS_hrx)
 
 chisq.test(miRNA_pheno$BB, miRNA_pheno$HRX8)
@@ -207,19 +212,20 @@ miR186_LS_DBP <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + ra
 summary(miR186_LS_DBP)
 
 # Adjusting for Both BP and Treatment for hypertension ####
-miR19a_BB_BP3 <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8  , data = miRNA_pheno)
+
+miR19a_BB_BP3 <- lm(miR19a ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB  , data = miRNA_pheno)
 summary(miR19a_BB_BP3)
-miR186_BB_BP3 <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+miR186_BB_BP3 <- lm(miR186 ~ BB + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB , data = miRNA_pheno)
 summary(miR186_BB_BP3)
 
-miR19a_Fto_BP3 <- lm(miR19a ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+miR19a_Fto_BP3 <- lm(miR19a ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB , data = miRNA_pheno)
 summary(miR19a_Fto_BP3)
-miR186_Fto_BP3 <- lm(miR186 ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+miR186_Fto_BP3 <- lm(miR186 ~ f8cbtobmd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB , data = miRNA_pheno)
 summary(miR186_Fto_BP3)
 
-miR19a_LS_BP3 <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+miR19a_LS_BP3 <- lm(miR19a ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB , data = miRNA_pheno)
 summary(miR19a_LS_BP3)
-miR186_LS_BP3 <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX8 , data = miRNA_pheno)
+miR186_LS_BP3 <- lm(miR186 ~ s8cbl24bd + AGE8 + SEX + HGT8 + WGT8 + rank260 + rankcon + rankqual + SBP8 + DBP8 + HRX_BB , data = miRNA_pheno)
 summary(miR186_LS_BP3)
 
 # Correlation between BP and Treatment for Hypertension/BB use ####
