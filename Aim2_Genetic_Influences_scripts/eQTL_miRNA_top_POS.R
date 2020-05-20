@@ -8,6 +8,8 @@ library(coxme)
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data/ktn_target_genes_4_2020")
 topsnps<-read.csv("Significant_SNPs_GCTA_COJO.csv", stringsAsFactors = F)
 
+cluster <- read.csv("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Clustering_miRNA/Figures/miRNA_MEs_nofilter.csv")
+names(cluster)[1]<- "shareid"
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data")
 pedigree1 <- read.csv("share_ped_052517.csv")
 load("CandidateGenes_4_2020.RData")
@@ -43,14 +45,18 @@ results_miRNA_lmekin <- function(miRNA,data, kmat, cov){
     results1 <- NULL
     for (i in 1:length(data$POS)){
       print(i)
-      x <- Sys.time()
-      lmmkin1 <- lmekin(formula = as.formula(paste(miRNA[j],"~gt_DS*BB+", cov, "+ (1|colnames(kmat))")), data = data$data[[i]],
-                        varlist = list(kmat))
-      new_results <- data.frame(extract_lmekin(lmmkin1), POS = data$POS[[i]], Gene = data$Gene[[i]], miRNA = miRNA[j])
-      new_results$var <- row.names(new_results)
-      results1 <- rbind(results1, new_results)
-      y<-Sys.time()
-      print(y-x)
+      tryCatch(
+        {
+        x <- Sys.time()
+        lmmkin1 <- lmekin(formula = as.formula(paste(miRNA[j],"~gt_DS*BB+", cov, "+ (1|colnames(kmat))")), data = data$data[[i]],
+                          varlist = list(kmat))
+        new_results <- data.frame(extract_lmekin(lmmkin1), POS = data$POS[[i]], Gene = data$Gene[[i]], miRNA = miRNA[j])
+        new_results$var <- row.names(new_results)
+        results1 <- rbind(results1, new_results)
+        y<-Sys.time()
+        print(y-x)
+        }, 
+        error = function(e){})
     }
     results <- rbind(results, results1)
   }
@@ -61,6 +67,14 @@ results_miRNA_lmekin <- function(miRNA,data, kmat, cov){
 data<-pheno_snp_pos %>% unnest(., cols = c(data))
 topdata <- data[data$POS %in% topsnps$bp,]
 
+# Split miRNA into model types ####
+Colsums1 <- Colsums[Colsums$NAs < 0.1 & !is.na(Colsums$NAs),] 
+Colsums1 <- Colsums1 %>% filter(.,variables != 'idtype.y') %>% filter(.,variables != 'casecontrol')
+Colsums2 <- Colsums[(Colsums$NAs > 0.9) & (Colsums$NAs < 0.95) & !is.na(Colsums$NAs),]
+Colsums3 <- Colsums[(Colsums$NAs > 0.1 & Colsums$NAs < 0.9)& !is.na(Colsums$NAs),]
+Colsums3 <- Colsums3 %>% filter(.,variables != 'cvdpair')
+Cluster_names <- names(cluster)
+Cluster_names <- Cluster_names[-1]
 
 # Format miRNA technical variables
 miRNA_delta_cq <- miRNAdat[-1]
@@ -78,7 +92,16 @@ miRNA_pheno_tech <- merge(topdata, mirnatech, by.x = "Indiv", by.y = "shareid")
 miRNA_pheno <- merge(miRNA_pheno_tech, miRNAdat, by.x = "Indiv", by.y = "shareid")
 miRNA_pheno$Isolation_Batch<-as.factor(miRNA_pheno$Isolation_Batch)
 drop <- c('cvdpair', 'casecontrol', 'idtype.x', "idtype.y")
-miRNA_pheno <- miRNA_pheno[, !(names(miRNA_pheno) %in% drop)]
+miRNA_pheno1 <- miRNA_pheno[, !(names(miRNA_pheno) %in% drop)]
+miRNA_pheno <- merge(miRNA_pheno1, cluster, by.y = "shareid", by.x = "Indiv")
+
+# Model 2 and 3 setup #### 
+miRNAdatna<- miRNA_pheno[names(miRNA_pheno) %in% c(Colsums2$variables, Colsums3$variables)]
+miRNAdatna[!is.na(miRNAdatna)] <- 0 #Detectable
+miRNAdatna[is.na(miRNAdatna)] <- 1 #Not Detectable
+miRNAdatna[sapply(miRNAdatna, is.numeric)] <- lapply(miRNAdatna[sapply(miRNAdatna, is.numeric)], as.logical)
+names(miRNAdatna)<-paste(names(miRNAdatna), "_nas", sep = '')
+miRNA_pheno <- cbind(miRNA_pheno, miRNAdatna)
 
 # Set up Pedigree file for all subjects ####
 data <- miRNA_pheno
@@ -110,36 +133,49 @@ male_kmat <- kmat1[male_ids,male_ids]
 data_fem_nest <- data_fem %>% group_by(., POS, Gene) %>% nest()
 data_male_nest <- data_male %>% group_by(., POS, Gene) %>% nest()
 
-# Split miRNA into model types ####
-Colsums1 <- Colsums[Colsums$NAs < 0.1 & !is.na(Colsums$NAs),] 
-Colsums1 <- Colsums1 %>% filter(.,variables != 'idtype.y') %>% filter(.,variables != 'casecontrol')
-Colsums2 <- Colsums[(Colsums$NAs > 0.9) & (Colsums$NAs < 0.95) & !is.na(Colsums$NAs),]
-Colsums3 <- Colsums[(Colsums$NAs > 0.1 & Colsums$NAs < 0.9)& !is.na(Colsums$NAs),]
-Colsums3 <- Colsums3 %>% filter(.,variables != 'cvdpair')
-
 # Run top miRNA ~ SNPs, Sex-stratified models ####
 fem_cov <- "AGE8 + HGT8 + BMI8 + EST8 + rankcon + rankqual + rank260"
 male_cov <- "AGE8 + HGT8 + BMI8 + rankcon + rankqual + rank260"
 top_miRNAs <- c("miR_19a_3p", "miR_186_5p_a1", "miR_186_5p_a2")
-fem_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-male_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+#fem_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+#male_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_male_nest,kmat = male_kmat, cov = male_cov)
 
 # Filter results
-fem_top_miR_sig <- fem_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
-male_top_miR_sig <- male_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
+#fem_top_miR_sig <- fem_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
+#male_top_miR_sig <- male_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
 
 # Run model 1 miRNA ~ SNPs, Sex Stratified Models ####
-fem_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-male_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_male_nest,kmat = male_kmat, cov = male_cov)
-fem_miRs_sig <- fem_results %>% filter(., var =="gt_DS:BBYes") %>% filter(.,p < 0.05 )
+#fem_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+#male_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+#fem_miRs_sig <- fem_results %>% filter(., var =="gt_DS:BBYes") %>% filter(.,p < 0.05 )
 
-write.csv(fem_results,"Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
-write.csv(male_results, "Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+#write.csv(fem_results,"Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+#write.csv(male_results, "Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
 
-# Plots ####
-library(ggplot2)
-miRNA_snp<-ggplot(data_male_nest$data[[1]], aes(x = gt_DS, y = miR_186_5p_a2, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
-FNBMD_snp<-ggplot(data_male_nest$data[[1]], aes(x = gt_DS, y = f8cbnbmd, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
-miRNA_FNBMD<-ggplot(data_male_nest$data[[1]], aes(x = miR_186_5p_a2, y = f8cbnbmd, col = BB)) + geom_smooth(method = lm)+theme(legend.position="top")
-library(gridExtra)
-grid.arrange(miRNA_snp, FNBMD_snp, miRNA_FNBMD, nrow = 1)
+# Run Cluster eQTL ####
+#fem_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+#male_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+
+#write.csv(fem_results, "Cluster_miRNA_LMEKIN_topSNPs_fem.csv", row.names = F, quote = F)
+#write.csv(male_results, "Cluster_miRNA_LMEKIN_topSNPs_male.csv", row.names = F, quote = F)
+
+# Model 2 eQTL ####
+#fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+#male_results <- results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
+
+#write.csv(fem_results,"Model2_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+#write.csv(male_results, "Model2_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+
+# Model 3 eQTL - Logistic ####
+#fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+#male_results <- results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
+
+#write.csv(fem_results,"Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+#write.csv(male_results, "Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+
+# Model 3 eQTL - Linear ####
+fem_results <-results_miRNA_lmekin(miRNA = Colsums3$variables, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = Colsums3$variables, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+
+write.csv(fem_results,"Model3_linear_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+write.csv(male_results, "Model3_linear_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
