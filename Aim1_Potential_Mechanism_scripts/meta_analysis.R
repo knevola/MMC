@@ -6,6 +6,8 @@ library(meta)
 
 data <- read.xlsx("Data_for_Meta_Analysis.xlsx", sheetIndex = 1)
 data_cor <- read.csv("Data_for_Meta_Analysis_cor.csv")
+data_cor_z <- data_cor[5:8,] 
+data_cor <- data_cor[1:4,]
 data_miR19 <- data[data$miRNA == "miR-19a-3p",]
 data_miR186 <- data[data$miRNA == "miR-186-5p",]
 
@@ -44,3 +46,12 @@ miR186_fixed_Tscore <-metagen(TE = Estimate, seTE = SE,data= data_Tscore_miR186,
 
 forest(miR19_fixed_Tscore)
 forest(miR186_fixed_Tscore)
+
+# Z-score correlation
+data_cor_z_19 <- data_cor_z[data_cor_z$miRNA == "miR-19a-3p",]
+data_cor_z_186 <- data_cor_z[data_cor_z$miRNA == "miR-186-5p",]
+miR19_fixed_Zscore<-metagen(TE = corr, seTE = Standard.Error,data= data_cor_z_19,comb.fixed = T, studlab = Cohort)
+miR186_fixed_Zscore <-metagen(TE = corr, seTE = Standard.Error,data= data_cor_z_186,comb.fixed = T, studlab = Cohort)
+
+forest(miR19_fixed_Zscore)
+forest(miR186_fixed_Zscore)
