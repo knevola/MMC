@@ -1,6 +1,9 @@
 # GITIGNORE!!
 *
 !*.R
+!Aim1_Potential_Mechanism_scripts/
+!Aim2_Genetic_Influences_scripts/
+!Side_Projects_scripts
 .Rproj.user
 .Rhistory
 .RData
@@ -15,3 +18,5 @@ data/
 figure/
 results/
 WGCNA/
+Clustering_itraq/
+
