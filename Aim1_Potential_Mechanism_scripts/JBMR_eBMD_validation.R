@@ -4,11 +4,14 @@ options(stringsAsFactors = F)
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
 library(xlsx)
 library(tidyverse)
+
+# Functions ####
 cor.test.plus <- function(x) {
   list(x, 
        Standard.Error = unname(sqrt((1 - x$estimate^2)/x$parameter)))
 }
 
+# Read Data ####
 miR_data <- read.xlsx("2020_01_16_miR19_186_in_SOS_hip_for_Kristine - Kopie (2).xlsx",sheetIndex = 1)
 bmd_data <- read.xlsx("eBMD heel ultrsound for rebuttal_Ines 26042020_incl. upper limb data_age_sex.xlsx", sheetIndex = 1)
 bmd_data$Sex <- as.factor(bmd_data$Sex)
@@ -51,6 +54,10 @@ summary(lm(`hsa-miR-186-5p`~Z.Score..Lunar.heel.ultrasound. + Height.cm + Weight
 summary(lm(`hsa-miR-19a-3p`~T.Score..Lunar.heel.ultrasound. + Height.cm + Weight.kg + Age. + Sex, data = bmd_info))
 summary(lm(`hsa-miR-186-5p`~T.Score..Lunar.heel.ultrasound. + Height.cm + Weight.kg + Age. + Sex, data = bmd_info))
 
+summary(lm(eBMD..Lunar.heel.ultrasound.~`hsa-miR-19a-3p` + Height.cm + Weight.kg + Age., data = bmd_info))
+summary(lm(eBMD..Lunar.heel.ultrasound.~`hsa-miR-186-5p` + Height.cm + Weight.kg + Age., data = bmd_info))
+
+
 hist(bmd_info$T.Score..Lunar.heel.ultrasound.)
 hist(bmd_info$Age.)
 mean(bmd_info$Age.)
@@ -67,3 +74,7 @@ summary(bmd_info$T.Score..Lunar.heel.ultrasound.)
 
 cor.test.plus(cor.test(bmd_info$T.Score..Lunar.heel.ultrasound., bmd_info$`hsa-miR-19a-3p`))
 cor.test.plus(cor.test(bmd_info$T.Score..Lunar.heel.ultrasound., bmd_info$`hsa-miR-186-5p`))
+cor.test.plus(cor.test(bmd_info$Z.Score..Lunar.heel.ultrasound., bmd_info$`hsa-miR-19a-3p`))
+cor.test.plus(cor.test(bmd_info$Z.Score..Lunar.heel.ultrasound., bmd_info$`hsa-miR-186-5p`))
+
+
