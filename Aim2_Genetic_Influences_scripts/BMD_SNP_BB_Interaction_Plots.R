@@ -1,5 +1,6 @@
 #FN BMD ~ SNP Interaction Plots
 rm(list = ls())
+library(tidyverse)
 library(dplyr)
 library(ggplot2)
 library(gridExtra)
@@ -32,4 +33,9 @@ for (i in 1:length(topdata_all$rsID)){
   ggsave(filename = paste(topdata_all$rsID[i],topdata_all$Gene.y[i], "FN_BMD_plot.jpg", sep = "_"),plot = plot)
 }
 
- 
+hist(topdata_all$data[[7]]$gt_DS,breaks = 10)
+x<-as.data.frame(table(topdata_all$data[[7]]$gt_DS))
+
+ggplot(data = topdata_all$data[[7]],aes(x = gt_DS)) + geom_histogram(bins = 39)
+
+ggplot(data = x,aes(x = Var1, y = Freq)) + geom_bar(stat="identity")
