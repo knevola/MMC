@@ -1,0 +1,10 @@
+rm(list = ls())
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
+library(xlsx)
+library(tidyverse)
+meta_analysis<-read.xlsx("GeneticMetaAnalysis.xlsx", sheetIndex = 1)
+
+ADRB1 <- meta_analysis %>% filter(., Gene == "ADRB1")
+HDAC4 <- meta_analysis %>% filter(., Gene == "HDAC4")
+RANK1 <- meta_analysis %>% filter(., rsID == "rs34170507")
+RANK2 <- meta_analysis %>% filter(., rsID == "rs6567268")
