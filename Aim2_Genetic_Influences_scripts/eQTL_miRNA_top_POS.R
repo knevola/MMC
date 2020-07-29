@@ -137,41 +137,41 @@ data_male_nest <- data_male %>% group_by(., POS, Gene) %>% nest()
 fem_cov <- "AGE8 + HGT8 + BMI8 + EST8 + rankcon + rankqual + rank260"
 male_cov <- "AGE8 + HGT8 + BMI8 + rankcon + rankqual + rank260"
 top_miRNAs <- c("miR_19a_3p", "miR_186_5p_a1", "miR_186_5p_a2")
-#fem_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-#male_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+fem_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = top_miRNAs, data = data_male_nest,kmat = male_kmat, cov = male_cov)
 
 # Filter results
-#fem_top_miR_sig <- fem_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
-#male_top_miR_sig <- male_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
+fem_top_miR_sig <- fem_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
+male_top_miR_sig <- male_results %>% filter(., var %in% c("gt_DS", "gt_DS:BBYes")) %>% filter(.,p < 0.05 )
 
 # Run model 1 miRNA ~ SNPs, Sex Stratified Models ####
-#fem_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-#male_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_male_nest,kmat = male_kmat, cov = male_cov)
-#fem_miRs_sig <- fem_results %>% filter(., var =="gt_DS:BBYes") %>% filter(.,p < 0.05 )
+fem_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = Colsums1$X, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+fem_miRs_sig <- fem_results %>% filter(., var =="gt_DS:BBYes") %>% filter(.,p < 0.05 )
 
-#write.csv(fem_results,"Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
-#write.csv(male_results, "Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+write.csv(fem_results,"Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+write.csv(male_results, "Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
 
 # Run Cluster eQTL ####
-#fem_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-#male_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_male_nest,kmat = male_kmat, cov = male_cov)
+fem_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = Cluster_names, data = data_male_nest,kmat = male_kmat, cov = male_cov)
 
-#write.csv(fem_results, "Cluster_miRNA_LMEKIN_topSNPs_fem.csv", row.names = F, quote = F)
-#write.csv(male_results, "Cluster_miRNA_LMEKIN_topSNPs_male.csv", row.names = F, quote = F)
+write.csv(fem_results, "Cluster_miRNA_LMEKIN_topSNPs_fem.csv", row.names = F, quote = F)
+write.csv(male_results, "Cluster_miRNA_LMEKIN_topSNPs_male.csv", row.names = F, quote = F)
 
 # Model 2 eQTL ####
-#fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-#male_results <- results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
+fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = paste(Colsums2$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
 
-#write.csv(fem_results,"Model2_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
-#write.csv(male_results, "Model2_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+write.csv(fem_results,"Model2_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+write.csv(male_results, "Model2_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
 
 # Model 3 eQTL - Logistic ####
-#fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
-#male_results <- results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
+fem_results <-results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
+male_results <- results_miRNA_lmekin(miRNA = paste(Colsums3$variables, "_nas", sep = ""), data = data_male_nest,kmat = male_kmat, cov = male_cov)
 
-#write.csv(fem_results,"Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
-#write.csv(male_results, "Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+write.csv(fem_results,"Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
+write.csv(male_results, "Model3_logistic_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
 
 # Model 3 eQTL - Linear ####
 fem_results <-results_miRNA_lmekin(miRNA = Colsums3$variables, data = data_fem_nest,kmat = female_kmat, cov = fem_cov)
@@ -179,3 +179,23 @@ male_results <- results_miRNA_lmekin(miRNA = Colsums3$variables, data = data_mal
 
 write.csv(fem_results,"Model3_linear_miRNA_LMEKIN_eQTL_topSNPs_fem.csv", row.names = F, quote = F)
 write.csv(male_results, "Model3_linear_miRNA_LMEKIN_eQTL_topSNPs_male.csv", row.names = F, quote = F)
+
+# Sensitivity analysis for Batch Effect #####
+fem_cov_batch <- "AGE8 + HGT8 + BMI8 + EST8 + rankcon + rankqual + rank260 + Isolation_Batch"
+male_cov_batch <- "AGE8 + HGT8 + BMI8 + rankcon + rankqual + rank260 + Isolation_Batch"
+
+rs124_data <- data_fem_nest[data_fem_nest$POS == 115803375,]
+rs124_miR_19a <- results_miRNA_lmekin(miRNA = "miR_19a_3p", data = rs124_data, kmat = female_kmat, cov = fem_cov_batch)
+
+rs111_data <- data_fem_nest[data_fem_nest$POS == 240223080,]
+rs111_miR_17 <-results_miRNA_lmekin(miRNA = "miR_17_5p", data = rs111_data, kmat = female_kmat, cov = fem_cov_batch)
+
+rs341_data <- data_male_nest[data_male_nest$POS == 60001153,]
+rs341_miRNA <- results_miRNA_lmekin(miRNA = "miR_31_5p", data = rs341_data, kmat = male_kmat, cov = male_cov_batch)
+
+rs656_data <- data_male_nest[data_male_nest$POS == 60026732,]
+rs656_miRNA <- results_miRNA_lmekin(miRNA = c("let_7g_5p", "miR_374a_5p"), data = rs656_data, kmat = male_kmat, cov = male_cov_batch)
+
+sens_data <- rbind(rs124_miR_19a, rs111_miR_17, rs341_miRNA, rs656_miRNA)
+sens_data_filtered <- sens_data %>% filter(., var == "gt_DS:BBYes")
+write.csv(sens_data_filtered, "SensitivityAnalysis_BatchEffect.csv", row.names = F, quote = F)
