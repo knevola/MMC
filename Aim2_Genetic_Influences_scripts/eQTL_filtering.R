@@ -116,4 +116,4 @@ fem_snp_HDAC4 <-miRNA_sig_POS %>%  filter(.,  POS == 240223080) %>% filter(., ta
 top_miRs<-rbind(rs12414657_miRNA,rs34170507_miRNA, rs6567268_miRNA, fem_snp_HDAC4)
 table(miRNA_sig_POS$POS, miRNA_sig_POS$miR_interest)
 table(miRNA_sig_POS_01_m$POS)
-write.csv(top_miRs, "Sig_Assoc_MiRNA_top_SNPs.csv", quote = F, row.names = F)
+write.csv(top_miRs, "Sig_Assoc_MiRNA_top_SNPs_Batch.csv", quote = F, row.names = F)
