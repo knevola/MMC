@@ -5,14 +5,14 @@ library(tidyverse)
 options(stringsAsFactors = F)
 # Read Files ####
 top_snps <- read.csv("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data/ktn_target_genes_4_2020/Significant_SNPs_GCTA_COJO.csv")
-fem_results1 <-read.csv("Model1_miRNA_LMEKIN_eQTL_topSNPs_fem.csv")
-male_results1 <- read.csv("Model1_miRNA_LMEKIN_eQTL_topSNPs_male.csv")
-fem_results2 <-read.csv("Model2_miRNA_LMEKIN_eQTL_topSNPs_fem.csv")
-male_results2 <- read.csv("Model2_miRNA_LMEKIN_eQTL_topSNPs_male.csv")
-fem_results3 <-read.csv("Model3_FisherMethod_eQTL_fem.csv")
-male_results3 <- read.csv("Model3_FisherMethod_eQTL_male.csv")
-fem_results_clust <-read.csv("Cluster_miRNA_LMEKIN_topSNPs_fem.csv")
-male_results_clust <- read.csv("Cluster_miRNA_LMEKIN_topSNPs_male.csv")
+fem_results1 <-read.csv("Model1_miRNA_LMEKIN_eQTL_topSNPs_fem_Batch.csv")
+male_results1 <- read.csv("Model1_miRNA_LMEKIN_eQTL_topSNPs_male_Batch.csv")
+fem_results2 <-read.csv("Model2_miRNA_LMEKIN_eQTL_topSNPs_fem_Batch.csv")
+male_results2 <- read.csv("Model2_miRNA_LMEKIN_eQTL_topSNPs_male_Batch.csv")
+fem_results3 <-read.csv("Model3_FisherMethod_eQTL_fem_Batch.csv")
+male_results3 <- read.csv("Model3_FisherMethod_eQTL_male_Batch.csv")
+fem_results_clust <-read.csv("Cluster_miRNA_LMEKIN_topSNPs_fem_Batch.csv")
+male_results_clust <- read.csv("Cluster_miRNA_LMEKIN_topSNPs_male_Batch.csv")
 
 fem_results1$Model <- "Model_1"
 fem_results1$Sex <- "Female"
