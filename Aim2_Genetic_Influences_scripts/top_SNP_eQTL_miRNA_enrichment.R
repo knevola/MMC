@@ -4,6 +4,7 @@ library(tidyverse)
 library(multiMiR)
 library(limma)
 library(ggplot2)
+library(biomaRt)
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Genetic Association Study/other genes/data")
 
 # Read files
@@ -28,11 +29,11 @@ HDAC4_miR_targets <- unique(HDAC4_miR_targets[3:5])
 
 # Filter for targetted by more that 1 miRNA
 ADRB1_target_freq<-as.data.frame(table(ADRB1_miR_targets$target_entrez))
-ADRB1_target_freq_3 <- ADRB1_target_freq[(ADRB1_target_freq$Freq > 2) & (ADRB1_target_freq$Freq < 10),]
+ADRB1_target_freq_3 <- ADRB1_target_freq[(ADRB1_target_freq$Freq > 2) & (ADRB1_target_freq$Freq < 7),]
 ADRB1_target_freq_3$Var1 <- as.character(ADRB1_target_freq_3$Var1)
 
 HDAC4_target_freq<-as.data.frame(table(HDAC4_miR_targets$target_entrez))
-HDAC4_target_freq_3 <- HDAC4_target_freq[(HDAC4_target_freq$Freq > 2) & (HDAC4_target_freq$Freq < 10),]
+HDAC4_target_freq_3 <- HDAC4_target_freq[(HDAC4_target_freq$Freq > 2) & (HDAC4_target_freq$Freq < 7),]
 HDAC4_target_freq_3$Var1 <- as.character(HDAC4_target_freq_3$Var1)
 
 # Enrichment analysis
@@ -52,5 +53,25 @@ bone_ADRB1_KEGG<- ADRB1_KEGG_sig %>%  filter(.,str_detect(Pathway, "Osteo*")& !s
 bone_HDAC4_GO<- HDAC4_GO_sig %>% filter(., Ont == "BP")%>%  filter(.,str_detect(Term, "osteo*")& !str_detect(Term, "cortico")|str_detect(Term,"bone")|str_detect(Term,"estrogen")|str_detect(Term,"insulin")|str_detect(Term,"thyroid"))
 bone_HDAC4_KEGG<- HDAC4_KEGG_sig %>%  filter(.,str_detect(Pathway, "Osteo*")& !str_detect(Pathway, "Cortico")|str_detect(Pathway,"Bone")|str_detect(Pathway,"Estrogen")|str_detect(Pathway,"Insulin")|str_detect(Pathway,"Thyroid"))
 
-ggplot(bone_ADRB1_GO, mapping = aes(x = Term, y = -log10(P.DE)))+ geom_bar(stat = "identity", fill = "steelblue") + coord_flip() + 
-  theme_minimal() + theme(axis.text = element_text(size = 12))
+bone_ADRB1_GO$Gene <- "ADRB1"
+bone_ADRB1_GO$SNP <- "rs12414657"
+bone_HDAC4_GO$Gene <- "HDAC4"
+bone_HDAC4_GO$SNP <- "rs11124190"
+bone_GO <- rbind(bone_ADRB1_GO, bone_HDAC4_GO)
+write.csv(bone_GO, "miRNA_GO.csv", row.names = F, quote = F)
+
+# Genes associated with annotations of interest
+ensembl = useMart("ensembl",dataset="hsapiens_gene_ensembl") #uses human ensembl annotations
+#gets gene symbol, entrez_id and go_id for all genes annotated with GO term
+z<-listFilters(ensembl)
+insulin_sig <- getBM(attributes=c('hgnc_symbol', 'entrezgene_id', 'go_id'),
+                   filters = 'go_parent_name', values = 'insulin receptor signaling pathway', mart = ensembl)
+insulin_sig_genes <-insulin_sig[insulin_sig$entrezgene_id %in% ADRB1_target_freq_3$Var1,]
+unique(insulin_sig_genes$hgnc_symbol)
+
+Oc_sig <- getBM(attributes=c('hgnc_symbol', 'entrezgene_id', 'go_id'),
+                     filters = 'go_parent_name', values = 'osteoclast differentiation', mart = ensembl)
+Oc_sig_genes <-Oc_sig[Oc_sig$entrezgene_id %in% ADRB1_target_freq_3$Var1,]
+unique(Oc_sig_genes$hgnc_symbol)
+
+write.cs
