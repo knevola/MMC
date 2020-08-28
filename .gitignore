@@ -4,6 +4,7 @@
 !Aim1_Potential_Mechanism_scripts/
 !Aim2_Genetic_Influences_scripts/
 !Side_Projects_scripts
+!*.txt
 .Rproj.user
 .Rhistory
 .RData
