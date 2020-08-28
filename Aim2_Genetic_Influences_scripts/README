@@ -38,9 +38,26 @@
     f. Significant Output: AllSNP_sig_interaction_LMEKIN_female.csv, AllSNP_sig_interaction_LMEKIN_male.csv
 2.2. BMD_SNP_BB_Interaction_Plots.R - plot FN BMD by SNP*BB interaction plots for top SNPs
 2.3. study_sample_table.R - Summary of Study Sample for Genetic Analysis
+2.4. GCTA_COJO.R - Run conditional and joint analysis on LMEKIN summary statistics using GCTA 
 
 ## 3. Top SNPs validation in external cohorts and meta analysis
 3.1. Malta_data_analysis.R - validation in Malta Osteoporosis Fracture Study
 3.2. Malta_data_analysis_Nick.R - validation in Hertfordshire Cohort Study
 3.3. meta_analysis.R - meta analysis of ADRB1 and HDAC4 in FHS and external validation cohorts
 
+## 4. miRNAs associated with top SNPs interaction effect
+4.1. eqtl_miRNA_top_POS.R - run miRNA LMM with kinship matrix
+    a. merge miRNA and genetic data
+    b. create kinship matrix for males and female from pedigree file
+    c. fun sex-stratified model for top SNPs and all miRNAs 
+    d. save results to csv
+    e. currently commented out - adjusting for batch effect
+4.2. Model3_eqtl_fisher_calc.R - calculate p-values for model 3 miRNAs
+4.3. eQTL_filtering.R - filter for significant interaction effect
+4.4. eQTL_filtering_comparison.R - comparing significant miRNAs with and without adjusting for batch effect
+4.5. top_SNP_eQTL_miRNA_enrichment.R - pathway enrichment of miRNAs
+
+## 5. Additional projects using genetic data and functions for future use
+5.1. vcftotidy_function.R - convert vcf files to tidy data
+5.2. LMEKIN_functions.R - functions for using LMEKIN (linear mixed model) and exporting data
+5.3. BMI_variability_BLCAP.R - export genetic and phenotype data for BLCAP SNPs
