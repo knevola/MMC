@@ -38,7 +38,8 @@
     f. Significant Output: AllSNP_sig_interaction_LMEKIN_female.csv, AllSNP_sig_interaction_LMEKIN_male.csv
 2.2. BMD_SNP_BB_Interaction_Plots.R - plot FN BMD by SNP*BB interaction plots for top SNPs
 2.3. study_sample_table.R - Summary of Study Sample for Genetic Analysis
-2.4. GCTA_COJO.R - Run conditional and joint analysis on LMEKIN summary statistics using GCTA 
+2.4. GCTA_COJO.R - Run conditional and joint analysis on LMEKIN summary statistics using GCTA
+2.5. CandidateGeneAnalysis_TopSNPS_LS.R - sensitivity analysis with LS BMD
 
 ## 3. Top SNPs validation in external cohorts and meta analysis
 3.1. Malta_data_analysis.R - validation in Malta Osteoporosis Fracture Study
