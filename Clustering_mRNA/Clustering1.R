@@ -3,10 +3,12 @@ library(tidyverse)
 library(emmeans)
 library(limma)
 library(WGCNA)
-setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data")
-sample_data <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/data/phe000002.v7_release_manifest.txt", comment.char="#")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
+sample_data <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data/phe000002.v7_release_manifest.txt", comment.char="#")
 data_adj <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
-pheno <- read.csv('PhenoData_5_28.csv', stringsAsFactors = T)
+pheno <- read.csv('PhenoData_5_28.csv', stringsAsFactors = T) # Created in Aim1_Potential_Mechanism_scripts/PhenoData_ISPE_KN.R
+
+# Connecting mRNA IDs to Gene Names: /home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/Aim1_Potential_Mechanism_scripts/mRNAcormiRNA.R
 
 # Pheno Tscore and grouping
 # pheno$Tscore <- ((-0.023 + 0.939 * pheno$f8cbnbmd  - 0.019)/1.087 - 0.858) / 0.120

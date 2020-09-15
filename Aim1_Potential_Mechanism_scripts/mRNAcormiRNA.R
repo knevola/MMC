@@ -11,7 +11,7 @@ mRNA_sample <- read.delim("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC
 mRNAdat <- read_delim("FinalFile_Gene_OFF_2446_Adjusted_c1.txt", "\t", escape_double = FALSE, trim_ws = TRUE)
 pheno_samp <- merge(pheno, mRNA_sample[,c(1,2)], by.x = "shareid", by.y = "Subject_ID")
 int <- read.csv("Spineoverlapresults_7_9_rank.csv")
-GPL5175 <- read_table2("GPL5175.txt", skip = 14)
+GPL5175 <- read_table2("GPL5175.txt", skip = 14) # Connecting mRNA ID to Genes Symbol (category)
 
 miRNA_delta_cq <- miRNAdat[-1]
 miRNA_delta_cq <- -(miRNA_delta_cq-27)

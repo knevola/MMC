@@ -43,3 +43,13 @@ ggplot(data = miRNA_pheno, aes(x = f8cbtobmd, y = miR186, color = BB)) + geom_sm
   xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + 
   theme(plot.title = element_text(hjust = 0.5)) + theme(axis.text = element_text(size = 10), axis.title = element_text(size = 10), title = element_text(size = 10), legend.text = element_text(size = 10), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
 ggsave(filename = "miR186byTFbmd.tiff", width = 90, height = 60 ,unit = "mm")
+
+ggplot(data = miRNA_pheno, aes(x = f8cbtobmd, y = miR19a, color = B1)) + geom_smooth(method = lm, se = TRUE, fullrange = TRUE) + ggtitle(label =  "miR-19a-3p by Total Femur BMD") + 
+  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + theme(plot.title = element_text(hjust = 0.5)) +theme(axis.text = element_text(size = 10), axis.title = element_text(size = 10), title = element_text(size = 10), legend.text = element_text(size = 10), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
+ggsave(filename = "miR19byTFbmd_B1.tiff", width = 90, height = 60 ,unit = "mm")
+
+ggplot(data = miRNA_pheno, aes(x = f8cbtobmd, y = miR186, color = B1)) + geom_smooth(method = lm, se = TRUE, fullrange = TRUE) + ggtitle(label =  "miR-186-5p by Total Femur BMD") + 
+  xlab("Total Femur BMD") + ylab ("| \u0394 Cq |") + theme_minimal() + scale_color_brewer(palette = "Reds") + 
+  theme(plot.title = element_text(hjust = 0.5)) + theme(axis.text = element_text(size = 10), axis.title = element_text(size = 10), title = element_text(size = 10), legend.text = element_text(size = 10), legend.position = c(0.1,0.8), legend.background = element_rect(fill="white",colour = "white")) 
+ggsave(filename = "miR186byTFbmd_B1.tiff", width = 90, height = 60 ,unit = "mm")
+
