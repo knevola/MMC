@@ -123,6 +123,8 @@ pheno3$B1B[pheno3$B1 == "Yes"]<- "B1-Selective"
 table(pheno3$B1B)
 table(pheno3$BB)
 setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
-#write.csv(pheno3,"PhenoData_5_28.csv", row.names = F)
+write.csv(pheno3,"PhenoData_5_28.csv", row.names = F)
+
 LDL <- cov %>% select(., shareid, SBP8, DBP8, CALC_LDL8, TC8)
 write.csv(LDL, "LDL_cov.csv", quote = F, row.names = F)
+
