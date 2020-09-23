@@ -1,6 +1,6 @@
 # JCEM Meta-Analysis
 rm(list = ls())
-setwd("~/Thesis")
+setwd("/home/clary@mmcf.mehealth.org/Framingham/OmicData/MMC/data")
 library(tidyverse)
 library(xlsx)
 library(meta)
@@ -13,8 +13,14 @@ RANK2 <- meta_analysis %>% filter(., rsID == "rs6567268")
 
 ADRB1_meta <- metagen(TE = ADRB1$beta, seTE = ADRB1$se, studlab = ADRB1$Cohort,pval = ADRB1$p)
 summary(ADRB1_meta)
+setEPS()
+postscript("ADRB1_meta.eps")
 forest(ADRB1_meta, digits = 4)
+dev.off()
 
 HDAC4_meta <- metagen(TE = HDAC4$beta, seTE = HDAC4$se, studlab = HDAC4$Cohort,pval = HDAC4$p)
 summary(HDAC4_meta)
+setEPS()
+postscript("HDAC4_meta.eps")
 forest(HDAC4_meta, digits = 4)
+dev.off()
